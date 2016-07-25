@@ -30,12 +30,12 @@ public class RemoteControlTableWidget extends TableLayout {
 
     private static final String DEFAULT_ZERO_VALUE = "0";
     private String mWorkingValue = DEFAULT_ZERO_VALUE;
-    private Optional<RemoteEventListener> mListener;
+    private Optional<RemoteEventListener> mListener = Optional.absent();
 
     private View.OnClickListener mNumberClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            RemoteButtonWidget view = (RemoteButtonWidget)v; //FIXME: is this the best way to extract a custom view if we're promised that's what we're getting?
+            RemoteButtonWidget view = (RemoteButtonWidget)v;
 
             if (mWorkingValue.equals(DEFAULT_ZERO_VALUE)) {
                 mWorkingValue = view.getButtonValue();
@@ -66,44 +66,45 @@ public class RemoteControlTableWidget extends TableLayout {
             if (mListener.isPresent()) {
                 mListener.get().onEnterButtonClicked(mWorkingValue, DEFAULT_ZERO_VALUE);
             }
+
+            mWorkingValue = DEFAULT_ZERO_VALUE;
         }
     };
 
     public RemoteControlTableWidget(Context context) {
         super(context);
-        setup(context);
+        setup();
     }
 
     public RemoteControlTableWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setup(context);
+        setup();
     }
 
     public void setRemoteEventListener(RemoteEventListener listener) {
         mListener = Optional.fromNullable(listener);
     }
 
-    private void setup(Context context) {
-        bindChildViews(context);
+    private void setup() {
+        bindChildViews();
         setupClickListeners();
     }
 
-    private void bindChildViews(Context context) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.view_remote_controls, this);
+    private void bindChildViews() {
+        inflate(getContext(), R.layout.view_remote_controls, this);
 
-        mOneButton = (RemoteButtonWidget) view.findViewById(R.id.remote_control_oneButton);
-        mTwoButton = (RemoteButtonWidget) view.findViewById(R.id.remote_control_twoButton);
-        mThreeButton = (RemoteButtonWidget) view.findViewById(R.id.remote_control_threeButton);
-        mFourButton = (RemoteButtonWidget) view.findViewById(R.id.remote_control_fourButton);
-        mFiveButton = (RemoteButtonWidget) view.findViewById(R.id.remote_control_fiveButton);
-        mSixButton = (RemoteButtonWidget) view.findViewById(R.id.remote_control_sixButton);
-        mSevenButton = (RemoteButtonWidget) view.findViewById(R.id.remote_control_sevenButton);
-        mEightButton = (RemoteButtonWidget) view.findViewById(R.id.remote_control_eightButton);
-        mNineButton = (RemoteButtonWidget) view.findViewById(R.id.remote_control_nineButton);
-        mZeroButton = (RemoteButtonWidget) view.findViewById(R.id.remote_control_zeroButton);
-        mEnterButton = (RemoteButtonWidget) view.findViewById(R.id.remote_control_enterButton);
-        mDeleteButton = (RemoteButtonWidget) view.findViewById(R.id.remote_control_deleteButton);
+        mOneButton = (RemoteButtonWidget) findViewById(R.id.remote_control_oneButton);
+        mTwoButton = (RemoteButtonWidget) findViewById(R.id.remote_control_twoButton);
+        mThreeButton = (RemoteButtonWidget) findViewById(R.id.remote_control_threeButton);
+        mFourButton = (RemoteButtonWidget) findViewById(R.id.remote_control_fourButton);
+        mFiveButton = (RemoteButtonWidget) findViewById(R.id.remote_control_fiveButton);
+        mSixButton = (RemoteButtonWidget) findViewById(R.id.remote_control_sixButton);
+        mSevenButton = (RemoteButtonWidget) findViewById(R.id.remote_control_sevenButton);
+        mEightButton = (RemoteButtonWidget) findViewById(R.id.remote_control_eightButton);
+        mNineButton = (RemoteButtonWidget) findViewById(R.id.remote_control_nineButton);
+        mZeroButton = (RemoteButtonWidget) findViewById(R.id.remote_control_zeroButton);
+        mEnterButton = (RemoteButtonWidget) findViewById(R.id.remote_control_enterButton);
+        mDeleteButton = (RemoteButtonWidget) findViewById(R.id.remote_control_deleteButton);
     }
 
     private void setupClickListeners() {
